@@ -1,0 +1,43 @@
+import time
+from turtle import Screen
+from player import Player
+from car_manager import CarManager
+from scoreboard import Scoreboard
+import random
+
+screen = Screen()
+screen.setup(width=600, height=600)
+screen.tracer(0)
+screen.bgcolor("white")
+screen.title("Road crossing game")
+
+player = Player()
+scoreboard = Scoreboard()
+cars = CarManager()
+
+screen.listen()
+
+screen.onkey(player.turtle_up, "Up")
+screen.onkey(player.turtle_left, "Left")
+screen.onkey(player.turtle_right, "Right")
+screen.onkey(player.turtle_down, "Down")
+
+game_is_on = True
+while game_is_on:
+
+    time.sleep(0.1)
+    screen.update()
+    cars.create_car()
+    cars.car_move()
+
+    if player.ycor() == 280:
+        player.finish_line()
+        scoreboard.level_up()
+        cars.speed_boost()
+
+    for car in cars.all_cars:
+        if car.distance(player) < 20:
+            scoreboard.game_over()
+            game_is_on = False
+
+screen.exitonclick()
